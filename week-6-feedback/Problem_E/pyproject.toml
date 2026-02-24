@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "counterexample-guideline1"
+version = "0.1.0"
+description = "Counterexample repo for Guideline 1 (tool command brittleness)"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{ include = "problems" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
