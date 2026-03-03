@@ -4,11 +4,11 @@ _Note: Use GPT 4.1 for repeatability. The counterexample and the new guideline w
 
 **Task Description:**
 
-You are given a file, `problem.py`, in the `ProblemA/` directory. This is a grade calculation program that should read students' marks from `x_state_42.tmp` and compute their final marks, where the midterm is worth 25% and the final is worth 50% (with homework making up the remaining 25%). The code contains numerous bugs — including random grade perturbation, state resets triggered by operation counters, and side effects on read operations — that prevent correct calculation. You cannot rename any functions. The final marks need to be saved to a new file, and the total number of non-I/O function calls must be tracked.
+You are given a file, `problem.py`, in the `Problem_A_Maksym/` directory. This is a grade calculation program that should read students' marks from `x_state_42.tmp` and compute their final marks, where the midterm is worth 25% and the final is worth 50% (with homework making up the remaining 25%). The code contains numerous bugs — including random grade perturbation, state resets triggered by operation counters, and side effects on read operations — that prevent correct calculation. You cannot rename any functions. The final marks need to be saved to a new file, and the total number of non-I/O function calls must be tracked.
 
 **Starter Code**
 
-Find both files in this [Github repo](https://github.com/hennyg888/CS846-Week8-Debugging) at `Problem_A_Maksym/`.
+Find both files in this [Github repo](https://github.com/hennyg888/CS846-Week8-Debugging) at `ProblemA/`.
 
 ---
 
