@@ -1,4 +1,4 @@
-## Problem A: Debug Grade Calculation Program (Your Name)
+## Problem A (Problem_A_Maksym in GitHub repo): Debug Grade Calculation Program (Maksym Bidnyi)
 
 _Note: Use GPT 4.1 for repeatability. The counterexample and the new guideline were created with the help of Claude Opus 4.6._
 
@@ -152,7 +152,7 @@ Additionally, the model rewrote `record_operation()` by gutting its body entirel
 
 ### New and Updated Guideline That Improves Robustness
 
-#### Guideline 10: Provide Minimal Reproducible Context
+#### Guideline 12: Provide Minimal Reproducible Context
 
 Before prompting the LLM to debug or review code, reduce your input to the smallest amount of code and context that still reproduces the problem. Include only the relevant functions, the error message or incorrect output, and a brief note on what the code should do. Remove unrelated files, boilerplate, and configuration. Include the actual vs. expected output of the program.
 
@@ -288,6 +288,6 @@ Edge cases handled:
 
 When the full 160-line file is provided with the self-debugging guideline (old Guideline 2), the model dutifully traces through every function — `record_operation`, `inspect_state`, `perturb_student_grades`, `delete_grade`, `rename_student`, and more — cataloguing all side effects with equal weight. This is thorough but unfocused: the model cannot distinguish which bugs are relevant to the task (computing weighted averages) from which are just general code smells. It ends up rewriting nearly every function, which risks breaking downstream consumers and goes beyond the scope of the fix.
 
-With the minimal reproducible context approach (new Guideline 10), only the two functions directly responsible for the incorrect output are provided, along with the input format, expected vs. actual behavior, and the constraints. The model immediately identifies the three bugs that actually matter: weights being ignored, random perturbation during computation, and random renaming during reads. The fix is targeted, preserving the rest of the codebase, and the response is shorter and more actionable.
+With the minimal reproducible context approach (new Guideline 12), only the two functions directly responsible for the incorrect output are provided, along with the input format, expected vs. actual behavior, and the constraints. The model immediately identifies the three bugs that actually matter: weights being ignored, random perturbation during computation, and random renaming during reads. The fix is targeted, preserving the rest of the codebase, and the response is shorter and more actionable.
 
 The key insight is that LLMs perform better when the signal-to-noise ratio in the prompt is high [11], [13]. Providing minimal context forces the model to focus on what matters rather than getting lost cataloguing every issue in a large file. This is analogous to writing a good StackOverflow question — the discipline of isolating the problem often leads to faster, more accurate solutions.
