@@ -8,7 +8,7 @@ You are given a file, `problem.py`, in the `ProblemA/` directory. This is a grad
 
 **Starter Code**
 
-Find both files in this [Github repo](https://github.com/hennyg888/CS846-Week8-Debugging) at `ProblemA/`.
+Find both files in this [Github repo](https://github.com/hennyg888/CS846-Week8-Debugging) at `Problem_A_Maksym/`.
 
 ---
 
