@@ -1,0 +1,30 @@
+The Scenario: You are given a small Python repository that implements a function:
+
+- `top_k_domains(lines: Iterable[str], k: int) -> List[DomainStat]`
+
+The repository contains:
+
+- `src/report.py`
+- `README.md`
+- `pyproject.toml`
+
+The function:
+
+- Parses newline-separated domain strings.
+- Ignores empty lines.
+- Counts hits per domain.
+- Returns the top-k domains sorted by descending hit count.
+- Must preserve existing behavior when refactoring.
+
+Important detail:
+
+The original implementation relies on **stable ordering behavior of dictionaries** to resolve ties implicitly.  
+When two domains have equal hit counts, the domain that appeared first in the input must appear first in the result.
+
+This tie-breaking rule is not explicitly documented as a requirement in the README, but it is relied upon by downstream tooling that expects deterministic ordering.
+
+Your task is to:
+
+1. Refactor or optimize the implementation.
+2. Keep behavior identical.
+3. Do not change public function signatures or file paths.
