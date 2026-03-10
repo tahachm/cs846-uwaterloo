@@ -1,0 +1,360 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /usr/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/CS846-Week9-Testing/problem_A
+collecting ... collected 10 items
+
+test_checkout_v1.py::test_in_stock_succeeds FAILED                       [ 10%]
+test_checkout_v1.py::test_out_of_stock_raises FAILED                     [ 20%]
+test_checkout_v1.py::test_bundle_discount_boundary[2-False] FAILED       [ 30%]
+test_checkout_v1.py::test_bundle_discount_boundary[3-True] FAILED        [ 40%]
+test_checkout_v1.py::test_bundle_discount_boundary[4-True] FAILED        [ 50%]
+test_checkout_v1.py::test_summer20_discount_is_capped_at_30 FAILED       [ 60%]
+test_checkout_v1.py::test_tax_calculated_on_discounted_subtotal FAILED   [ 70%]
+test_checkout_v1.py::test_shipping_uses_discounted_subtotal FAILED       [ 80%]
+test_checkout_v1.py::test_shipping_free_when_discounted_above_50 FAILED  [ 90%]
+test_checkout_v1.py::test_flash5_incompatible_with_vip PASSED            [100%]
+
+=================================== FAILURES ===================================
+____________________________ test_in_stock_succeeds ____________________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfaefefaa0>
+
+    def test_in_stock_succeeds(service):
+        """Item in stock → checkout should succeed."""
+        cart = _cart(CartItem("p1", "Widget", 25.0, 2))
+>       result = service.process_checkout(cart, _regular())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfaefefaa0>
+cart = <checkout_service.Cart object at 0x7ebfaefee390>
+customer = <checkout_service.Customer object at 0x7ebfaefefa40>
+coupon_code = None, redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+___________________________ test_out_of_stock_raises ___________________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfaf022480>
+
+    def test_out_of_stock_raises(service):
+        """Item NOT in stock → CheckoutError."""
+        service.inventory.check_stock.return_value = False
+        cart = _cart(CartItem("p1", "Widget", 25.0, 2))
+>       with pytest.raises(CheckoutError, match="out of stock"):
+E       Failed: DID NOT RAISE <class 'checkout_service.CheckoutError'>
+
+test_checkout_v1.py:68: Failed
+____________________ test_bundle_discount_boundary[2-False] ____________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfae90d190>, qty = 2
+expect_bundle = False
+
+    @pytest.mark.parametrize("qty, expect_bundle", [
+        (2, False),
+        (3, True),   # boundary: exactly 3 should get bundle
+        (4, True),
+    ])
+    def test_bundle_discount_boundary(service, qty, expect_bundle):
+        price = 20.0
+        cart = _cart(CartItem("p1", "Widget", price, qty))
+>       result = service.process_checkout(cart, _regular())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfae90d190>
+cart = <checkout_service.Cart object at 0x7ebfae90d130>
+customer = <checkout_service.Customer object at 0x7ebfae90d1f0>
+coupon_code = None, redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+____________________ test_bundle_discount_boundary[3-True] _____________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfaf3622a0>, qty = 3
+expect_bundle = True
+
+    @pytest.mark.parametrize("qty, expect_bundle", [
+        (2, False),
+        (3, True),   # boundary: exactly 3 should get bundle
+        (4, True),
+    ])
+    def test_bundle_discount_boundary(service, qty, expect_bundle):
+        price = 20.0
+        cart = _cart(CartItem("p1", "Widget", price, qty))
+>       result = service.process_checkout(cart, _regular())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfaf3622a0>
+cart = <checkout_service.Cart object at 0x7ebfaf3af7a0>
+customer = <checkout_service.Customer object at 0x7ebfaf3638c0>
+coupon_code = None, redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+____________________ test_bundle_discount_boundary[4-True] _____________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfaefecb90>, qty = 4
+expect_bundle = True
+
+    @pytest.mark.parametrize("qty, expect_bundle", [
+        (2, False),
+        (3, True),   # boundary: exactly 3 should get bundle
+        (4, True),
+    ])
+    def test_bundle_discount_boundary(service, qty, expect_bundle):
+        price = 20.0
+        cart = _cart(CartItem("p1", "Widget", price, qty))
+>       result = service.process_checkout(cart, _regular())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfaefecb90>
+cart = <checkout_service.Cart object at 0x7ebfae90ff50>
+customer = <checkout_service.Customer object at 0x7ebfae90c140>
+coupon_code = None, redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+____________________ test_summer20_discount_is_capped_at_30 ____________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfae944140>
+
+    def test_summer20_discount_is_capped_at_30(service):
+        """SUMMER20 gives 20% but capped at $30 max discount."""
+        # subtotal = $200 → 20% = $40 → should be capped to $30
+        cart = _cart(CartItem("p1", "Widget", 100.0, 2))
+>       result = service.process_checkout(cart, _regular(), coupon_code="SUMMER20")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfae944140>
+cart = <checkout_service.Cart object at 0x7ebfae9440e0>
+customer = <checkout_service.Customer object at 0x7ebfae9441a0>
+coupon_code = 'SUMMER20', redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+__________________ test_tax_calculated_on_discounted_subtotal __________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfae9469f0>
+
+    def test_tax_calculated_on_discounted_subtotal(service):
+        """Tax (13%) should be applied AFTER discounts, per spec."""
+        # subtotal = $200, SAVE10 discount = $20, discounted = $180
+        cart = _cart(CartItem("p1", "Widget", 100.0, 2))
+>       result = service.process_checkout(cart, _regular(), coupon_code="SAVE10")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfae9469f0>
+cart = <checkout_service.Cart object at 0x7ebfae946990>
+customer = <checkout_service.Customer object at 0x7ebfae946a50>
+coupon_code = 'SAVE10', redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+____________________ test_shipping_uses_discounted_subtotal ____________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfae9397c0>
+
+    def test_shipping_uses_discounted_subtotal(service):
+        """Shipping should be free when DISCOUNTED subtotal >= $50."""
+        # subtotal = $55, SAVE10 requires $100 min so use no coupon
+        # VIP discount 15% → discounted = 55 * 0.85 = 46.75 < 50 → $10 shipping
+        cart = _cart(CartItem("p1", "Widget", 55.0, 1))
+>       result = service.process_checkout(cart, _vip())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfae9397c0>
+cart = <checkout_service.Cart object at 0x7ebfae939760>
+customer = <checkout_service.Customer object at 0x7ebfae939820>
+coupon_code = None, redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+_________________ test_shipping_free_when_discounted_above_50 __________________
+
+service = <checkout_service.CheckoutService object at 0x7ebfae960350>
+
+    def test_shipping_free_when_discounted_above_50(service):
+        """Shipping free when discounted subtotal >= $50."""
+        # subtotal = $60, no coupon, regular customer → discounted = $60 >= 50 → free
+        cart = _cart(CartItem("p1", "Widget", 60.0, 1))
+>       result = service.process_checkout(cart, _regular())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_checkout_v1.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkout_service.CheckoutService object at 0x7ebfae960350>
+cart = <checkout_service.Cart object at 0x7ebfae9602f0>
+customer = <checkout_service.Customer object at 0x7ebfae9603b0>
+coupon_code = None, redeem_points = False
+
+    def process_checkout(
+        self,
+        cart: Cart,
+        customer: Customer,
+        coupon_code: Optional[str] = None,
+        redeem_points: bool = False,
+    ) -> dict:
+        """
+        Process checkout and return a result dict with keys:
+            status, subtotal, discount, tax, shipping, total,
+            coupon_applied, points_redeemed
+        """
+        # Stock validation
+        for item in cart.items:
+            if self.inventory.check_stock(item.product_id, item.quantity):
+>               raise CheckoutError(f"Item '{item.name}' is out of stock")
+E               checkout_service.CheckoutError: Item 'Widget' is out of stock
+
+checkout_service.py:126: CheckoutError
+=========================== short test summary info ============================
+FAILED test_checkout_v1.py::test_in_stock_succeeds - checkout_service.Checkou...
+FAILED test_checkout_v1.py::test_out_of_stock_raises - Failed: DID NOT RAISE ...
+FAILED test_checkout_v1.py::test_bundle_discount_boundary[2-False] - checkout...
+FAILED test_checkout_v1.py::test_bundle_discount_boundary[3-True] - checkout_...
+FAILED test_checkout_v1.py::test_bundle_discount_boundary[4-True] - checkout_...
+FAILED test_checkout_v1.py::test_summer20_discount_is_capped_at_30 - checkout...
+FAILED test_checkout_v1.py::test_tax_calculated_on_discounted_subtotal - chec...
+FAILED test_checkout_v1.py::test_shipping_uses_discounted_subtotal - checkout...
+FAILED test_checkout_v1.py::test_shipping_free_when_discounted_above_50 - che...
+========================= 9 failed, 1 passed in 0.43s ==========================
