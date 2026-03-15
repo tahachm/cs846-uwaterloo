@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /usr/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/CS846-Week9-Testing/problem_A
+collecting ... collected 11 items
+
+test_checkout_v3_spec_anchored.py::test_in_stock_should_succeed_with_true XFAIL [  9%]
+test_checkout_v3_spec_anchored.py::test_out_of_stock_should_raise_with_false XFAIL [ 18%]
+test_checkout_v3_spec_anchored.py::test_bundle_discount_at_exactly_3 XFAIL [ 27%]
+test_checkout_v3_spec_anchored.py::test_bundle_discount_at_4 PASSED      [ 36%]
+test_checkout_v3_spec_anchored.py::test_summer20_capped_at_30 XFAIL      [ 45%]
+test_checkout_v3_spec_anchored.py::test_tax_on_discounted_amount XFAIL   [ 54%]
+test_checkout_v3_spec_anchored.py::test_shipping_on_discounted_subtotal XFAIL [ 63%]
+test_checkout_v3_spec_anchored.py::test_flash5_incompatible_with_vip XFAIL [ 72%]
+test_checkout_v3_spec_anchored.py::test_save10_applied_correctly PASSED  [ 81%]
+test_checkout_v3_spec_anchored.py::test_vip_discount PASSED              [ 90%]
+test_checkout_v3_spec_anchored.py::test_loyalty_points_redeemed PASSED   [100%]
+
+========================= 4 passed, 7 xfailed in 0.32s =========================
